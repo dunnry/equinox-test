@@ -1,0 +1,8 @@
+POST https://localhost:5001/todos
+content-type: application/json
+
+{
+    "title": "asdfasdf",
+    "order": 3,
+    "completed": false
+}

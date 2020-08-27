@@ -1,0 +1,55 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Ingestor",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/DirectIngestor/bin/Debug/netcoreapp3.1/Reactor.dll",
+            "args": [
+                "-g",
+                "default",
+                "cosmos",
+                "-c",
+                "equinox-test",
+                "cosmos"
+            ],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "env": {
+                "EQUINOX_COSMOS_CONNECTION": "AccountEndpoint=https://equinox-test.documents.azure.com:443/;AccountKey=MDTJJGXVvGU1WBxUNm99gifPnW2WINHT66VBOZAGDVX7PeTUqHZAr6OShzW5U0IqPP3UZGLYQn0MRo8qqJT1cg==;",
+                "EQUINOX_COSMOS_DATABASE": "equinox-test",
+                "EQUINOX_COSMOS_CONTAINER": "equinox-test"
+            },
+            "console": "internalConsole"
+        },
+        {
+            "name": ".NET Core Launch (web)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/Web/bin/Debug/netcoreapp3.1/Web.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "EQUINOX_COSMOS_CONNECTION": "AccountEndpoint=https://equinox-test.documents.azure.com:443/;AccountKey=MDTJJGXVvGU1WBxUNm99gifPnW2WINHT66VBOZAGDVX7PeTUqHZAr6OShzW5U0IqPP3UZGLYQn0MRo8qqJT1cg==;",
+                "EQUINOX_COSMOS_DATABASE": "equinox-test",
+                "EQUINOX_COSMOS_CONTAINER": "equinox-test"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        }
+
+    ]
+}
