@@ -7,6 +7,7 @@ open Microsoft.Extensions.Hosting
 open Serilog
 open System
 open prop
+open DirectIngestor
 
 /// Equinox store bindings
 module Storage =
@@ -70,13 +71,17 @@ module Services =
     /// Binds a storage independent Service's Handler's `resolve` function to a given Stream Policy using the StreamResolver
     type ServiceBuilder(resolver: StreamResolver) =
          member __.CreateTodosService() =
-            let fold, initial = Todo.Fold.fold, Todo.Fold.initial
-            let snapshot = Todo.Fold.isOrigin, Todo.Fold.snapshot
-            Todo.create (resolver.Resolve(Todo.Events.codec, fold, initial, snapshot))
+            let fold, initial = prop.Todo.Fold.fold, prop.Todo.Fold.initial
+            let snapshot = prop.Todo.Fold.isOrigin, prop.Todo.Fold.snapshot
+            prop.Todo.create (resolver.Resolve(prop.Todo.Events.codec, fold, initial, snapshot))
          member __.CreateAggregateService() =
             let fold, initial = Aggregate.Fold.fold, Aggregate.Fold.initial
             let snapshot = Aggregate.Fold.isOrigin, Aggregate.Fold.snapshot
             Aggregate.create (resolver.Resolve(Aggregate.Events.codec, fold, initial, snapshot))
+         member __.CreateSummaryService() =
+            let fold, initial = TodoSummary.Fold.fold, TodoSummary.Fold.initial
+            let snapshot = (fun _ -> false), TodoSummary.Fold.snapshot
+            TodoSummary.create (resolver.Resolve(TodoSummary.Events.codec, fold, initial, snapshot))
 
     /// F# syntactic sugar for registering services
     type IServiceCollection with
@@ -93,6 +98,7 @@ module Services =
         services.Register(fun sp -> ServiceBuilder(sp.Resolve()))
         services.Register(fun sp -> sp.Resolve<ServiceBuilder>().CreateTodosService())
         services.Register(fun sp -> sp.Resolve<ServiceBuilder>().CreateAggregateService())
+        services.Register(fun sp -> sp.Resolve<ServiceBuilder>().CreateSummaryService())
 
 /// Defines the Hosting configuration, including registration of the store and backend services
 type Startup() =

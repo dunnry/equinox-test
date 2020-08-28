@@ -28,7 +28,7 @@
             "console": "internalConsole"
         },
         {
-            "name": ".NET Core Launch (web)",
+            "name": "Web",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
