@@ -43,6 +43,17 @@ let render : Fold.State -> Item[] = function
                 completed = x.completed } |]
     | _ -> [||]
 
+let render2 (item:Events.ItemData) : Item =
+    {   id = item.id
+        order = item.order
+        title = item.title
+        completed = item.completed }
+
+let render3 (sd: Events.SummaryData): Item[] =
+    [|
+        for x in sd.items -> render2 x
+    |]
+
 /// Defines the operations that the Read side of a Controller and/or the Ingester can perform on the 'aggregate'
 type Service internal (resolve : ClientId -> Equinox.Stream<Events.Event, Fold.State>) =
 
@@ -51,9 +62,9 @@ type Service internal (resolve : ClientId -> Equinox.Stream<Events.Event, Fold.S
         let stream = resolve clientId
         stream.Transact(decide (Consume (version, value)))
 
-    member __.Read clientId: Async<Item[]> =
+    member __.Read clientId: Async<Item[] option> =
         let stream = resolve clientId
-        stream.Query render
+        stream.Query (fun x -> x.value |> Option.map render3 )
 
 let create resolve =
     let resolve clientId =
